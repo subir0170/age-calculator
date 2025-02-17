@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-field {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #calculate {
+            background: #3498db;
+            color: white;
+        }
+
+        #reset {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .result {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-box {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .result-box span {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .input-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Age Calculator</h1>
+        <div class="input-group">
+            <div class="input-field">
+                <label for="day">Day</label>
+                <input type="number" id="day" placeholder="DD" min="1" max="31">
+                <span class="error-message" id="day-error"></span>
+            </div>
+            <div class="input-field">
+                <label for="month">Month</label>
+                <input type="number" id="month" placeholder="MM" min="1" max="12">
+                <span class="error-message" id="month-error"></span>
+            </div>
+            <div class="input-field">
+                <label for="year">Year</label>
+                <input type="number" id="year" placeholder="YYYY" min="1900">
+                <span class="error-message" id="year-error"></span>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="calculate">Calculate</button>
+            <button id="reset">Reset</button>
+        </div>
+        <div class="result">
+            <div class="result-box">
+                <span id="years">--</span>
+                <p>Years</p>
+            </div>
+            <div class="result-box">
+                <span id="months">--</span>
+                <p>Months</p>
+            </div>
+            <div class="result-box">
+                <span id="days">--</span>
+                <p>Days</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const calculateBtn = document.getElementById('calculate');
+        const resetBtn = document.getElementById('reset');
+        const dayInput = document.getElementById('day');
+        const monthInput = document.getElementById('month');
+        const yearInput = document.getElementById('year');
+        const resultDiv = document.querySelector('.result');
+        
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+
+        function showError(element, message) {
+            element.nextElementSibling.textContent = message;
+            element.nextElementSibling.style.display = 'block';
+            element.style.borderColor = '#e74c3c';
+        }
+
+        function clearError(element) {
+            element.nextElementSibling.textContent = '';
+            element.nextElementSibling.style.display = 'none';
+            element.style.borderColor = '#e0e0e0';
+        }
+
+        function isValidDate(day, month, year) {
+            const date = new Date(year, month - 1, day);
+            return (
+                date.getFullYear() === year &&
+                date.getMonth() === month - 1 &&
+                date.getDate() === day
+            );
+        }
+
+        function calculateAge() {
+            const day = parseInt(dayInput.value);
+            const month = parseInt(monthInput.value);
+            const year = parseInt(yearInput.value);
+
+            let isValid = true;
+
+            // Clear previous errors
+            [dayInput, monthInput, yearInput].forEach(clearError);
+
+            // Validation
+            if (!day || day < 1 || day > 31) {
+                showError(dayInput, 'Must be a valid day');
+                isValid = false;
+            }
+            if (!month || month < 1 || month > 12) {
+                showError(monthInput, 'Must be a valid month');
+                isValid = false;
+            }
+            if (!year || year > currentYear) {
+                showError(yearInput, 'Must be a valid year');
+                isValid = false;
+            }
+            if (!isValidDate(day, month, year)) {
+                showError(dayInput, 'Must be a valid date');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Calculate age
+            const birthDate = new Date(year, month - 1, day);
+            const today = new Date();
+            
+            let ageYears = today.getFullYear() - birthDate.getFullYear();
+            let ageMonths = today.getMonth() - birthDate.getMonth();
+            let ageDays = today.getDate() - birthDate.getDate();
+
+            if (ageDays < 0) {
+                ageMonths--;
+                ageDays += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+
+            if (ageMonths < 0) {
+                ageYears--;
+                ageMonths += 12;
+            }
+
+            // Display results
+            document.getElementById('years').textContent = ageYears;
+            document.getElementById('months').textContent = ageMonths;
+            document.getElementById('days').textContent = ageDays;
+            resultDiv.classList.add('show');
+        }
+
+        function resetCalculator() {
+            [dayInput, monthInput, yearInput].forEach(input => {
+                input.value = '';
+                clearError(input);
+            });
+            resultDiv.classList.remove('show');
+            document.getElementById('years').textContent = '--';
+            document.getElementById('months').textContent = '--';
+            document.getElementById('days').textContent = '--';
+        }
+
+        calculateBtn.addEventListener('click', calculateAge);
+        resetBtn.addEventListener('click', resetCalculator);
+    </script>
+</body>
+</html>
