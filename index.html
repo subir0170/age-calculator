@@ -3,281 +3,766 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age Calculator</title>
+    <title>DOB Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --error-color: #f72585;
+            --fun-color-1: #ff9e00;
+            --fun-color-2: #ff006e;
+            --fun-color-3: #8338ec;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .calculator {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 600px;
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 0%,
+                transparent 50%,
+                var(--fun-color-1) 50%,
+                var(--fun-color-2) 100%
+            );
+            opacity: 0.1;
+            z-index: 0;
+            animation: rotateBG 20s linear infinite;
+        }
+
+        @keyframes rotateBG {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .container > * {
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
+            color: var(--primary-color);
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            background: linear-gradient(45deg, var(--primary-color), var(--fun-color-3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
         }
 
-        .input-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .input-field {
-            flex: 1;
+        .form-group {
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #34495e;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: clamp(14px, 3vw, 16px);
         }
 
-        input {
+        input, select {
             width: 100%;
-            padding: 0.8rem;
+            padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 16px);
+            transition: all 0.2s;
+            background-color: rgba(255,255,255,0.9);
+            appearance: none;
+            -webkit-appearance: none;
         }
 
-        input:focus {
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent-color);
             outline: none;
-            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
 
-        .buttons {
+        .date-inputs {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 10px;
         }
 
         button {
-            flex: 1;
-            padding: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--fun-color-3));
+            color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
+            padding: 14px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            font-size: clamp(16px, 3vw, 18px);
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover, button:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
         }
 
         button:active {
-            transform: scale(0.98);
-        }
-
-        #calculate {
-            background: #3498db;
-            color: white;
-        }
-
-        #reset {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .result {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-        }
-
-        .result.show {
-            opacity: 1;
             transform: translateY(0);
         }
 
-        .result-box {
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(248, 249, 250, 0.9);
+            display: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .result.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .result h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: clamp(18px, 4vw, 22px);
             text-align: center;
-            background: #f8f9fa;
-            padding: 1rem;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .result h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--fun-color-1), var(--fun-color-2));
+            border-radius: 3px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 12px;
             border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s;
         }
 
-        .result-box span {
-            font-size: 2rem;
+        .result-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: clamp(12px, 3vw, 14px);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .result-value {
             font-weight: 700;
-            color: #2c3e50;
+            color: var(--primary-color);
+            font-size: clamp(14px, 3vw, 16px);
         }
 
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+        .error {
+            color: var(--error-color);
+            font-size: clamp(12px, 3vw, 14px);
+            margin-top: 5px;
             display: none;
         }
 
+        .error.show {
+            display: block;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: var(--fun-color-1);
+            opacity: 0;
+            z-index: 10;
+            animation: confettiFall 3s linear forwards;
+            pointer-events: none;
+        }
+
+        .birthday-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 100;
+            text-align: center;
+            max-width: 90%;
+            width: 300px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .birthday-message.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .birthday-message h3 {
+            color: var(--fun-color-2);
+            font-size: clamp(18px, 4vw, 22px);
+            margin-bottom: 10px;
+        }
+
+        .birthday-message p {
+            margin-bottom: 15px;
+            font-size: clamp(14px, 3vw, 16px);
+        }
+
+        .birthday-message button {
+            width: auto;
+            padding: 8px 16px;
+            margin: 0 auto;
+            font-size: clamp(14px, 3vw, 16px);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .zodiac-icon {
+            font-size: clamp(30px, 6vw, 40px);
+            margin-bottom: 8px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .age-display {
+            font-size: clamp(2rem, 8vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--fun-color-1), var(--fun-color-2), var(--fun-color-3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 10px 0;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            gap: 5px;
+        }
+
+        .time-unit span {
+            font-size: clamp(12px, 3vw, 14px);
+            white-space: nowrap;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes confettiFall {
+            0% { 
+                transform: translateY(-100px) rotate(0deg); 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg); 
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Mobile-specific adjustments */
         @media (max-width: 480px) {
-            .input-group {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 20px 15px;
+                border-radius: 15px;
+            }
+
+            .date-inputs {
                 flex-direction: column;
+                gap: 8px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .result-item {
+                padding: 10px;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .result-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h1>Age Calculator</h1>
-        <div class="input-group">
-            <div class="input-field">
-                <label for="day">Day</label>
-                <input type="number" id="day" placeholder="DD" min="1" max="31">
-                <span class="error-message" id="day-error"></span>
+    <div class="container animate__animated animate__fadeIn">
+        <h1 class="animate__animated animate__bounceIn">Age Calculator</h1>
+        
+        <div class="form-group">
+            <label for="day">Day</label>
+            <div class="date-inputs">
+                <select id="day">
+                    <option value="" disabled selected>Day</option>
+                    <!-- Days will be populated by JavaScript -->
+                </select>
             </div>
-            <div class="input-field">
-                <label for="month">Month</label>
-                <input type="number" id="month" placeholder="MM" min="1" max="12">
-                <span class="error-message" id="month-error"></span>
-            </div>
-            <div class="input-field">
-                <label for="year">Year</label>
-                <input type="number" id="year" placeholder="YYYY" min="1900">
-                <span class="error-message" id="year-error"></span>
-            </div>
+            <div class="error" id="day-error">Please select a valid day</div>
         </div>
-        <div class="buttons">
-            <button id="calculate">Calculate</button>
-            <button id="reset">Reset</button>
+        
+        <div class="form-group">
+            <label for="month">Month</label>
+            <div class="date-inputs">
+                <select id="month">
+                    <option value="" disabled selected>Month</option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="error" id="month-error">Please select a month</div>
         </div>
-        <div class="result">
-            <div class="result-box">
-                <span id="years">--</span>
-                <p>Years</p>
+        
+        <div class="form-group">
+            <label for="year">Year</label>
+            <div class="date-inputs">
+                <select id="year">
+                    <option value="" disabled selected>Year</option>
+                    <!-- Years will be populated by JavaScript -->
+                </select>
             </div>
-            <div class="result-box">
-                <span id="months">--</span>
-                <p>Months</p>
+            <div class="error" id="year-error">Please select a valid year</div>
+        </div>
+        
+        <button id="calculate-btn">
+            Calculate My Age!
+        </button>
+        
+        <div class="result" id="result">
+            <h2>Your Age Details</h2>
+            
+            <div class="age-display">
+                <span id="age">--</span>
+                <div class="time-unit">
+                    <span id="months">--</span>
+                    <span>months</span>
+                    <span id="days">--</span>
+                    <span>days</span>
+                </div>
             </div>
-            <div class="result-box">
-                <span id="days">--</span>
-                <p>Days</p>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <div class="zodiac-icon" id="zodiac-icon">♈</div>
+                    <div class="result-label">Zodiac Sign</div>
+                    <div class="result-value" id="zodiac">--</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Next Birthday</div>
+                    <div class="result-value" id="next-birthday">--</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Days Until</div>
+                    <div class="result-value" id="days-until">--</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Born on</div>
+                    <div class="result-value" id="day-of-week">--</div>
+                </div>
             </div>
         </div>
     </div>
 
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="birthday-message" id="birthday-message">
+        <h3>🎉 Happy Birthday! 🎉</h3>
+        <p>Today is your special day! Wishing you an amazing year ahead!</p>
+        <button id="close-birthday">Celebrate!</button>
+    </div>
+
     <script>
-        const calculateBtn = document.getElementById('calculate');
-        const resetBtn = document.getElementById('reset');
-        const dayInput = document.getElementById('day');
-        const monthInput = document.getElementById('month');
-        const yearInput = document.getElementById('year');
-        const resultDiv = document.querySelector('.result');
-        
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-
-        function showError(element, message) {
-            element.nextElementSibling.textContent = message;
-            element.nextElementSibling.style.display = 'block';
-            element.style.borderColor = '#e74c3c';
-        }
-
-        function clearError(element) {
-            element.nextElementSibling.textContent = '';
-            element.nextElementSibling.style.display = 'none';
-            element.style.borderColor = '#e0e0e0';
-        }
-
-        function isValidDate(day, month, year) {
-            const date = new Date(year, month - 1, day);
-            return (
-                date.getFullYear() === year &&
-                date.getMonth() === month - 1 &&
-                date.getDate() === day
-            );
-        }
-
-        function calculateAge() {
-            const day = parseInt(dayInput.value);
-            const month = parseInt(monthInput.value);
-            const year = parseInt(yearInput.value);
-
-            let isValid = true;
-
-            // Clear previous errors
-            [dayInput, monthInput, yearInput].forEach(clearError);
-
-            // Validation
-            if (!day || day < 1 || day > 31) {
-                showError(dayInput, 'Must be a valid day');
-                isValid = false;
-            }
-            if (!month || month < 1 || month > 12) {
-                showError(monthInput, 'Must be a valid month');
-                isValid = false;
-            }
-            if (!year || year > currentYear) {
-                showError(yearInput, 'Must be a valid year');
-                isValid = false;
-            }
-            if (!isValidDate(day, month, year)) {
-                showError(dayInput, 'Must be a valid date');
-                isValid = false;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate days
+            const daySelect = document.getElementById('day');
+            for (let i = 1; i <= 31; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                daySelect.appendChild(option);
             }
 
-            if (!isValid) return;
-
-            // Calculate age
-            const birthDate = new Date(year, month - 1, day);
-            const today = new Date();
-            
-            let ageYears = today.getFullYear() - birthDate.getFullYear();
-            let ageMonths = today.getMonth() - birthDate.getMonth();
-            let ageDays = today.getDate() - birthDate.getDate();
-
-            if (ageDays < 0) {
-                ageMonths--;
-                ageDays += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            // Populate years (from current year - 100 to current year)
+            const yearSelect = document.getElementById('year');
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= currentYear - 100; i--) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                yearSelect.appendChild(option);
             }
 
-            if (ageMonths < 0) {
-                ageYears--;
-                ageMonths += 12;
-            }
-
-            // Display results
-            document.getElementById('years').textContent = ageYears;
-            document.getElementById('months').textContent = ageMonths;
-            document.getElementById('days').textContent = ageDays;
-            resultDiv.classList.add('show');
-        }
-
-        function resetCalculator() {
-            [dayInput, monthInput, yearInput].forEach(input => {
-                input.value = '';
-                clearError(input);
+            // Calculate button click event
+            const calculateBtn = document.getElementById('calculate-btn');
+            calculateBtn.addEventListener('click', calculateAge);
+            calculateBtn.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(0)';
             });
-            resultDiv.classList.remove('show');
-            document.getElementById('years').textContent = '--';
-            document.getElementById('months').textContent = '--';
-            document.getElementById('days').textContent = '--';
-        }
+            calculateBtn.addEventListener('touchend', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
 
-        calculateBtn.addEventListener('click', calculateAge);
-        resetBtn.addEventListener('click', resetCalculator);
+            // Close birthday message
+            document.getElementById('close-birthday').addEventListener('click', function() {
+                document.getElementById('birthday-message').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            });
+
+            // Update days based on month selection (for February)
+            document.getElementById('month').addEventListener('change', function() {
+                updateDays();
+            });
+
+            document.getElementById('year').addEventListener('change', function() {
+                updateDays();
+            });
+
+            function updateDays() {
+                const month = document.getElementById('month').value;
+                const year = document.getElementById('year').value;
+                const daySelect = document.getElementById('day');
+                
+                if (!month || !year) return;
+                
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const currentDay = daySelect.value;
+                
+                // Remove all days
+                while (daySelect.options.length > 1) {
+                    daySelect.remove(1);
+                }
+                
+                // Add correct number of days
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    daySelect.appendChild(option);
+                }
+                
+                // Restore selected day if it's still valid
+                if (currentDay && currentDay <= daysInMonth) {
+                    daySelect.value = currentDay;
+                }
+            }
+
+            function calculateAge() {
+                // Reset errors
+                document.getElementById('day-error').classList.remove('show');
+                document.getElementById('month-error').classList.remove('show');
+                document.getElementById('year-error').classList.remove('show');
+                
+                // Get input values
+                const day = document.getElementById('day').value;
+                const month = document.getElementById('month').value;
+                const year = document.getElementById('year').value;
+                
+                // Validate inputs
+                let isValid = true;
+                
+                if (!day) {
+                    document.getElementById('day-error').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!month) {
+                    document.getElementById('month-error').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!year) {
+                    document.getElementById('year-error').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    // Shake the form for fun
+                    const container = document.querySelector('.container');
+                    container.style.animation = 'none';
+                    void container.offsetWidth; // Trigger reflow
+                    container.style.animation = 'shake 0.5s';
+                    return;
+                }
+                
+                // Calculate age
+                const birthDate = new Date(year, month - 1, day);
+                const today = new Date();
+                
+                // Check if date is valid
+                if (birthDate > today) {
+                    document.getElementById('day-error').textContent = 'Birth date cannot be in the future';
+                    document.getElementById('day-error').classList.add('show');
+                    return;
+                }
+                
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                // Calculate months
+                let months;
+                if (today.getMonth() >= birthDate.getMonth()) {
+                    months = today.getMonth() - birthDate.getMonth();
+                } else {
+                    months = 12 + today.getMonth() - birthDate.getMonth();
+                }
+                
+                // Calculate days
+                let days;
+                if (today.getDate() >= birthDate.getDate()) {
+                    days = today.getDate() - birthDate.getDate();
+                } else {
+                    const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    days = lastMonth.getDate() - birthDate.getDate() + today.getDate();
+                    months--;
+                }
+                
+                // Calculate next birthday
+                let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                if (nextBirthday < today) {
+                    nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+                }
+                
+                // Calculate days until next birthday
+                const timeUntilBirthday = nextBirthday - today;
+                const daysUntil = Math.ceil(timeUntilBirthday / (1000 * 60 * 60 * 24));
+                
+                // Check if today is birthday
+                const isBirthday = today.getDate() === birthDate.getDate() && 
+                                   today.getMonth() === birthDate.getMonth();
+                
+                if (isBirthday) {
+                    showBirthdayMessage();
+                    createConfetti();
+                }
+                
+                // Get day of week born
+                const dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][birthDate.getDay()];
+                
+                // Get zodiac sign
+                const zodiacSign = getZodiacSign(month, day);
+                const zodiacIcon = getZodiacIcon(zodiacSign);
+                
+                // Format dates
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const nextBirthdayFormatted = nextBirthday.toLocaleDateString('en-US', options);
+                
+                // Display results
+                document.getElementById('age').textContent = age;
+                document.getElementById('months').textContent = months;
+                document.getElementById('days').textContent = days;
+                document.getElementById('next-birthday').textContent = isBirthday ? 'Today!' : nextBirthdayFormatted;
+                document.getElementById('days-until').textContent = isBirthday ? '0 (Today!)' : daysUntil;
+                document.getElementById('day-of-week').textContent = dayOfWeek;
+                document.getElementById('zodiac').textContent = zodiacSign;
+                document.getElementById('zodiac-icon').textContent = zodiacIcon;
+                
+                // Show result with animation
+                const result = document.getElementById('result');
+                result.classList.add('active');
+                
+                // Add celebration if birthday
+                if (isBirthday) {
+                    result.style.background = 'linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,255,255,0.9) 100%)';
+                    result.style.border = '2px solid gold';
+                }
+            }
+            
+            function showBirthdayMessage() {
+                document.getElementById('birthday-message').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            }
+            
+            function createConfetti() {
+                const colors = ['#ff9e00', '#ff006e', '#8338ec', '#3a86ff', '#ffbe0b'];
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = Math.random() * 8 + 4 + 'px';
+                    confetti.style.height = Math.random() * 8 + 4 + 'px';
+                    confetti.style.animationDuration = Math.random() * 2 + 1 + 's';
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }
+            }
+            
+            function getZodiacSign(month, day) {
+                month = parseInt(month);
+                day = parseInt(day);
+                
+                if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "Aquarius";
+                if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return "Pisces";
+                if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "Aries";
+                if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "Taurus";
+                if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "Gemini";
+                if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "Cancer";
+                if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Leo";
+                if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Virgo";
+                if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "Libra";
+                if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "Scorpio";
+                if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "Sagittarius";
+                if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "Capricorn";
+                
+                return "Unknown";
+            }
+            
+            function getZodiacIcon(sign) {
+                const icons = {
+                    "Aries": "♈",
+                    "Taurus": "♉",
+                    "Gemini": "♊",
+                    "Cancer": "♋",
+                    "Leo": "♌",
+                    "Virgo": "♍",
+                    "Libra": "♎",
+                    "Scorpio": "♏",
+                    "Sagittarius": "♐",
+                    "Capricorn": "♑",
+                    "Aquarius": "♒",
+                    "Pisces": "♓"
+                };
+                return icons[sign] || "★";
+            }
+        });
     </script>
 </body>
 </html>
