@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOB Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #4361ee;
@@ -17,39 +18,68 @@
             --fun-color-1: #ff9e00;
             --fun-color-2: #ff006e;
             --fun-color-3: #8338ec;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.18);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: var(--dark-color);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--light-color);
             line-height: 1.6;
-            padding: 20px;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            padding: 20px;
             overflow-x: hidden;
         }
 
+        /* Improved select dropdown styling */
+        select {
+            color: white;
+            background-color: rgba(118, 75, 162, 0.7);
+        }
+
+        select option {
+            color: white;
+            background-color: #764ba2;
+            padding: 10px;
+        }
+
+        /* For Firefox */
+        select:-moz-focusring {
+            color: transparent;
+            text-shadow: 0 0 0 white;
+        }
+
+        /* For IE10+ */
+        select::-ms-expand {
+            display: none;
+        }
+
         .container {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            padding: 30px;
             width: 100%;
-            max-width: 500px;
-            transition: all 0.3s ease;
+            max-width: 550px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             position: relative;
             overflow: hidden;
             margin: 20px 0;
+            z-index: 1;
         }
 
         .container::before {
@@ -59,16 +89,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                transparent 0%,
-                transparent 50%,
-                var(--fun-color-1) 50%,
-                var(--fun-color-2) 100%
-            );
-            opacity: 0.1;
-            z-index: 0;
-            animation: rotateBG 20s linear infinite;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: rotateBG 15s linear infinite;
         }
 
         @keyframes rotateBG {
@@ -76,116 +99,154 @@
             100% { transform: rotate(360deg); }
         }
 
-        .container > * {
-            position: relative;
-            z-index: 1;
-        }
-
         h1 {
-            color: var(--primary-color);
+            color: white;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 700;
-            font-size: clamp(1.8rem, 5vw, 2.2rem);
-            background: linear-gradient(45deg, var(--primary-color), var(--fun-color-3));
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            background: linear-gradient(45deg, white, #e0e0e0);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--fun-color-1), var(--fun-color-2));
+            border-radius: 4px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-color);
-            font-size: clamp(14px, 3vw, 16px);
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            font-size: clamp(15px, 3vw, 17px);
         }
 
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: clamp(14px, 3vw, 16px);
-            transition: all 0.2s;
-            background-color: rgba(255,255,255,0.9);
+            padding: 15px 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            font-size: clamp(15px, 3vw, 17px);
+            transition: all 0.3s ease;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
             appearance: none;
             -webkit-appearance: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         select {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 15px;
+            background-position: right 15px center;
+            background-size: 18px;
+        }
+
+        input::placeholder {
+            color: rgba(255,255,255,0.6);
         }
 
         input:focus, select:focus {
-            border-color: var(--accent-color);
+            border-color: rgba(255,255,255,0.4);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+            background-color: rgba(255,255,255,0.15);
         }
 
         .date-inputs {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
 
         button {
-            background: linear-gradient(45deg, var(--primary-color), var(--fun-color-3));
+            background: linear-gradient(45deg, var(--fun-color-1), var(--fun-color-2));
             color: white;
             border: none;
-            padding: 14px 20px;
-            border-radius: 10px;
+            padding: 16px 24px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: clamp(16px, 3vw, 18px);
             font-weight: 600;
             width: 100%;
-            transition: all 0.3s;
-            margin-top: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 10px 20px rgba(255, 158, 0, 0.3);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--fun-color-3), var(--fun-color-2));
+            transition: all 0.4s ease;
+            z-index: -1;
         }
 
         button:hover, button:focus {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 158, 0, 0.4);
+        }
+
+        button:hover::before {
+            left: 0;
         }
 
         button:active {
-            transform: translateY(0);
+            transform: translateY(1px);
         }
 
         .result {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(248, 249, 250, 0.9);
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.1);
             display: none;
-            border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .result.active {
             display: block;
-            animation: fadeInUp 0.5s ease-out;
+            animation: fadeInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
         .result h2 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: clamp(18px, 4vw, 22px);
+            color: white;
+            margin-bottom: 20px;
+            font-size: clamp(20px, 4vw, 24px);
             text-align: center;
             position: relative;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
         }
 
         .result h2::after {
@@ -194,62 +255,74 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
+            width: 80px;
+            height: 4px;
             background: linear-gradient(90deg, var(--fun-color-1), var(--fun-color-2));
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
         .result-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .result-item {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 18px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .result-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .result-label {
-            font-weight: 600;
-            color: var(--dark-color);
-            font-size: clamp(12px, 3vw, 14px);
-            margin-bottom: 5px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            font-size: clamp(13px, 3vw, 15px);
+            margin-bottom: 8px;
             display: block;
         }
 
         .result-value {
-            font-weight: 700;
-            color: var(--primary-color);
-            font-size: clamp(14px, 3vw, 16px);
+            font-weight: 600;
+            color: white;
+            font-size: clamp(16px, 3vw, 18px);
         }
 
         .error {
             color: var(--error-color);
-            font-size: clamp(12px, 3vw, 14px);
-            margin-top: 5px;
+            font-size: clamp(13px, 3vw, 15px);
+            margin-top: 8px;
             display: none;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .error.show {
             display: block;
+            animation: shake 0.5s ease;
         }
 
         .confetti {
             position: fixed;
-            width: 8px;
-            height: 8px;
+            width: 12px;
+            height: 12px;
             background-color: var(--fun-color-1);
             opacity: 0;
             z-index: 10;
             animation: confettiFall 3s linear forwards;
             pointer-events: none;
+            border-radius: 50%;
         }
 
         .birthday-message {
@@ -257,16 +330,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            z-index: 1000;
             text-align: center;
             max-width: 90%;
-            width: 300px;
+            width: 350px;
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .birthday-message.active {
@@ -276,20 +351,23 @@
 
         .birthday-message h3 {
             color: var(--fun-color-2);
-            font-size: clamp(18px, 4vw, 22px);
-            margin-bottom: 10px;
+            font-size: clamp(22px, 4vw, 26px);
+            margin-bottom: 15px;
+            font-weight: 700;
         }
 
         .birthday-message p {
-            margin-bottom: 15px;
-            font-size: clamp(14px, 3vw, 16px);
+            margin-bottom: 20px;
+            font-size: clamp(15px, 3vw, 17px);
+            color: var(--dark-color);
         }
 
         .birthday-message button {
             width: auto;
-            padding: 8px 16px;
+            padding: 12px 24px;
             margin: 0 auto;
-            font-size: clamp(14px, 3vw, 16px);
+            font-size: clamp(15px, 3vw, 17px);
+            border-radius: 50px;
         }
 
         .overlay {
@@ -298,11 +376,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 99;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(5px);
         }
 
         .overlay.active {
@@ -311,22 +390,34 @@
         }
 
         .zodiac-icon {
-            font-size: clamp(30px, 6vw, 40px);
-            margin-bottom: 8px;
+            font-size: clamp(36px, 6vw, 48px);
+            margin-bottom: 12px;
             display: inline-block;
-            animation: float 3s ease-in-out infinite;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
 
         .age-display {
-            font-size: clamp(2rem, 8vw, 3rem);
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
             font-weight: 800;
             background: linear-gradient(45deg, var(--fun-color-1), var(--fun-color-2), var(--fun-color-3));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin: 10px 0;
+            margin: 15px 0;
             text-align: center;
             line-height: 1.2;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .age-display::after {
+            content: 'years';
+            display: block;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            margin-top: 5px;
         }
 
         .time-unit {
@@ -334,82 +425,123 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            margin-top: 8px;
-            gap: 5px;
+            margin-top: 10px;
+            gap: 8px;
         }
 
         .time-unit span {
-            font-size: clamp(12px, 3vw, 14px);
+            font-size: clamp(14px, 3vw, 16px);
             white-space: nowrap;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes confettiFall {
             0% { 
-                transform: translateY(-100px) rotate(0deg); 
+                transform: translateY(-100px) rotate(0deg) scale(1); 
                 opacity: 1;
             }
             100% { 
-                transform: translateY(100vh) rotate(360deg); 
+                transform: translateY(100vh) rotate(720deg) scale(0.5); 
                 opacity: 0;
             }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
-        /* Mobile-specific adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-                align-items: flex-start;
-            }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
 
+        @keyframes floatElement {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
             .container {
-                padding: 20px 15px;
-                border-radius: 15px;
+                padding: 25px 20px;
+                border-radius: 20px;
             }
 
             .date-inputs {
                 flex-direction: column;
-                gap: 8px;
+                gap: 12px;
             }
 
             .result-grid {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .result-item {
-                padding: 10px;
-            }
-
             button {
-                padding: 12px;
+                padding: 14px;
             }
         }
 
-        @media (max-width: 360px) {
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
             .result-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .birthday-message {
+                width: 90%;
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="floating-elements">
+        <div class="floating-element" style="width: 100px; height: 100px; top: 10%; left: 5%; animation-duration: 20s; animation-delay: 0s;"></div>
+        <div class="floating-element" style="width: 150px; height: 150px; top: 60%; left: 70%; animation-duration: 25s; animation-delay: 5s;"></div>
+        <div class="floating-element" style="width: 80px; height: 80px; top: 30%; left: 80%; animation-duration: 18s; animation-delay: 2s;"></div>
+        <div class="floating-element" style="width: 120px; height: 120px; top: 70%; left: 10%; animation-duration: 22s; animation-delay: 7s;"></div>
+    </div>
+
     <div class="container animate__animated animate__fadeIn">
-        <h1 class="animate__animated animate__bounceIn">Age Calculator</h1>
+        <h1 class="animate__animated animate__fadeInDown">Age Calculator</h1>
         
         <div class="form-group">
-            <label for="day">Day</label>
+            <label for="day"><i class="fas fa-calendar-day"></i> Day</label>
             <div class="date-inputs">
                 <select id="day">
-                    <option value="" disabled selected>Day</option>
+                    <option value="" disabled selected>Select Day</option>
                     <!-- Days will be populated by JavaScript -->
                 </select>
             </div>
@@ -417,10 +549,10 @@
         </div>
         
         <div class="form-group">
-            <label for="month">Month</label>
+            <label for="month"><i class="fas fa-calendar-month"></i> Month</label>
             <div class="date-inputs">
                 <select id="month">
-                    <option value="" disabled selected>Month</option>
+                    <option value="" disabled selected>Select Month</option>
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -439,10 +571,10 @@
         </div>
         
         <div class="form-group">
-            <label for="year">Year</label>
+            <label for="year"><i class="fas fa-calendar"></i> Year</label>
             <div class="date-inputs">
                 <select id="year">
-                    <option value="" disabled selected>Year</option>
+                    <option value="" disabled selected>Select Year</option>
                     <!-- Years will be populated by JavaScript -->
                 </select>
             </div>
@@ -450,7 +582,7 @@
         </div>
         
         <button id="calculate-btn">
-            Calculate My Age!
+            <i class="fas fa-calculator"></i> Calculate My Age!
         </button>
         
         <div class="result" id="result">
@@ -496,11 +628,16 @@
     <div class="birthday-message" id="birthday-message">
         <h3>🎉 Happy Birthday! 🎉</h3>
         <p>Today is your special day! Wishing you an amazing year ahead!</p>
-        <button id="close-birthday">Celebrate!</button>
+        <button id="close-birthday">
+            <i class="fas fa-birthday-cake"></i> Celebrate!
+        </button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Add floating elements
+            createFloatingElements();
+            
             // Populate days
             const daySelect = document.getElementById('day');
             for (let i = 1; i <= 31; i++) {
@@ -523,11 +660,23 @@
             // Calculate button click event
             const calculateBtn = document.getElementById('calculate-btn');
             calculateBtn.addEventListener('click', calculateAge);
-            calculateBtn.addEventListener('touchstart', function() {
-                this.style.transform = 'translateY(0)';
-            });
-            calculateBtn.addEventListener('touchend', function() {
-                this.style.transform = 'translateY(-2px)';
+            
+            // Add ripple effect to button
+            calculateBtn.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple-effect');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
             });
 
             // Close birthday message
@@ -544,6 +693,31 @@
             document.getElementById('year').addEventListener('change', function() {
                 updateDays();
             });
+
+            function createFloatingElements() {
+                const container = document.querySelector('.floating-elements');
+                for (let i = 0; i < 8; i++) {
+                    const element = document.createElement('div');
+                    element.classList.add('floating-element');
+                    
+                    const size = Math.random() * 100 + 50;
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    const duration = Math.random() * 15 + 10;
+                    const delay = Math.random() * 10;
+                    
+                    element.style.width = size + 'px';
+                    element.style.height = size + 'px';
+                    element.style.top = posY + '%';
+                    element.style.left = posX + '%';
+                    element.style.animationDuration = duration + 's';
+                    element.style.animationDelay = delay + 's';
+                    element.style.opacity = Math.random() * 0.2 + 0.05;
+                    element.style.background = `radial-gradient(circle, rgba(255,255,255,${Math.random() * 0.3}) 0%, transparent 70%)`;
+                    
+                    container.appendChild(element);
+                }
+            }
 
             function updateDays() {
                 const month = document.getElementById('month').value;
@@ -694,8 +868,8 @@
                 
                 // Add celebration if birthday
                 if (isBirthday) {
-                    result.style.background = 'linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,255,255,0.9) 100%)';
-                    result.style.border = '2px solid gold';
+                    result.style.background = 'linear-gradient(135deg, rgba(255,215,0,0.15) 0%, rgba(255,255,255,0.1) 100%)';
+                    result.style.border = '1px solid rgba(255,215,0,0.3)';
                 }
             }
             
@@ -707,21 +881,22 @@
             function createConfetti() {
                 const colors = ['#ff9e00', '#ff006e', '#8338ec', '#3a86ff', '#ffbe0b'];
                 
-                for (let i = 0; i < 50; i++) {
+                for (let i = 0; i < 100; i++) {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     confetti.style.left = Math.random() * 100 + 'vw';
                     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.width = Math.random() * 8 + 4 + 'px';
-                    confetti.style.height = Math.random() * 8 + 4 + 'px';
-                    confetti.style.animationDuration = Math.random() * 2 + 1 + 's';
+                    confetti.style.width = Math.random() * 12 + 6 + 'px';
+                    confetti.style.height = Math.random() * 12 + 6 + 'px';
+                    confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
                     confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
                     document.body.appendChild(confetti);
                     
                     // Remove confetti after animation
                     setTimeout(() => {
                         confetti.remove();
-                    }, 3000);
+                    }, 5000);
                 }
             }
             
